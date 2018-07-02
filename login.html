@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" /> 
     <style>
         .login{
-            width: 600px;
+            width: 500px;
             margin: 0 auto ;
         }
     </style>
@@ -19,18 +19,18 @@
                     <h2>欢迎登录</h2>
                     <div class="form-group">
                       <label for="exampleInputEmail1">用户名</label>
-                      <input type="email" class="form-control" name="username" id="username" placeholder="请输入你的用户名">
+                      <input type="text" class="form-control" id="username" placeholder="请输入你的用户名">
                     </div>
                     <div class="form-group">
                       <label for="exampleInputPassword1">密码</label>
-                      <input type="password" class="form-control" name="password" id="password" placeholder="请输入你的密码">
+                      <input type="password" class="form-control" id="password" placeholder="请输入你的密码">
                     </div>
                     <div class="checkbox">
                       <label>
                         <input type="checkbox"> 同意用户协议
                       </label>
                     </div>
-                    <button type="button" class="btn btn-success .btn-lg" id="btn">登录</button>
+                    <button type="button" class="btn btn-success btn-lg btn-block" id="btn">登录</button>
                   </form>
     </div>
 </body>
@@ -38,18 +38,24 @@
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="js/cookie.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<!-- <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 <script>
     var $username = $("#username");
     var $password = $("#password");
-    var $btn = $("#btn");
+    var $btn = $('#btn');
+   $btn.click(function () {
     var params = {
         username:$username.val(),
         password:$password.val()
     }
-    $btn.onclick = function (){
-        $.post("work.php",params,function(json){
-        console.log(json);
-        },"json");
-    }
+    console.log(1)
+    $.post("work/work.php",params,function(json){
+        if(json.code == 0){
+            console.log(json)
+            // window.location.href = 'work/mannage.php' ;
+        }else{
+            alert(json.msg);
+        }
+    },"json")
+   })
 </script>
