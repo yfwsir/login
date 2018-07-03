@@ -51,8 +51,8 @@
     console.log(1)
     $.post("work/work.php",params,function(json){
         if(json.code == 0){
-            console.log(json)
-            // window.location.href = 'work/mannage.php' ;
+            // console.log(json)
+            window.location.href = 'manage.html' ;
         }else{
             alert(json.msg);
         }

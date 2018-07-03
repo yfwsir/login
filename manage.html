@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <style>
+        table{
+            text-align: center;
+            width: 700px;
+            /* height: 600px; */
+            table-layout: fixed;
+        }
+        th{
+            text-align: center;
+            height: 80px;
+            font-size: 20px;
+        }
+        tr{
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <table class="table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>用户名</th>
+                <th>分数</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr> 
+        </thead>
+        <tbody class="tbody">
+
+        </tbody>
+    </table>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script>
+        $.post('work/getData.php',function(json){
+            if(json.code==0){
+                // console.log(json)
+                // var $tbody = $(".tbody") ;
+                var $tbody = document.querySelector('.tbody');
+                // var $tbody = $('.tbody');
+                for(var i = 0; i < json.data.length; i++){
+                    var tr = document.createElement('tr');
+                    for(var j in json.data[i]){
+                        var td = document.createElement('td');
+                        td.innerHTML = json.data[i][j] ;
+                        tr.appendChild(td);
+                    }
+                    var td =document.createElement('td');
+                    td.innerHTML = "<button class='btn btn-info'>添加</button><button class='btn btn-warning'>删除</button>"
+                    tr.appendChild(td);
+                    $tbody.appendChild(tr);
+                }    
+            }
+        },"json")
+        $('.tbody').on('click','.btn-warning',function(){
+            // console.log(1);
+            var $tr = this.closest('tr') ;
+            console.log($tr)
+            $.post('work/delete.php',{id:$tr.firstElementChild.innerHTML},function(json){
+                if(json.code == 0){
+                    console.log(json)
+                    $tr.remove();
+                }
+            },"json")
+
+        })
+    </script>
+</body>
+</html>
