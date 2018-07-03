@@ -9,7 +9,7 @@
     <style>
         table{
             text-align: center;
-            width: 700px;
+            width: 900px;
             /* height: 600px; */
             table-layout: fixed;
         }
@@ -77,7 +77,9 @@
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
     <script>
-        $.post('work/getData.php',function(json){
+
+        //渲染数据
+        $.post('php/getData.php',function(json){
             if(json.code==0){
                 // console.log(json)
                 // var $tbody = $(".tbody") ;
@@ -97,11 +99,13 @@
                 }    
             }
         },"json")
+
+        //删除数据
         $('.tbody').on('click','.btn-warning',function(){
             // console.log(1);
             var $tr = this.closest('tr') ;
             console.log($tr)
-            $.post('work/delete.php',{id:$tr.firstElementChild.innerHTML},function(json){
+            $.post('php/delete.php',{id:$tr.firstElementChild.innerHTML},function(json){
                 if(json.code == 0){
                     console.log(json)
                     $tr.remove();
@@ -109,6 +113,8 @@
             },"json")
         })
        
+
+       //添加
         $('.addScore').click(function(){
             // console.log(1);
             $('#myModal').modal('show') ;
@@ -124,7 +130,7 @@
                 score : $('#exampleInputPassword1').val(),
                 mark : $('#exampleInputPassword2').val(),
             }
-            $.post('work/add.php',params,function(json){
+            $.post('php/add.php',params,function(json){
                 if(json.code==0){
                     var $tbody = document.querySelector('.tbody');
                     $tbody.innerHTML = '';
@@ -140,7 +146,7 @@
                         tr.appendChild(td);
                     }
                     var td =document.createElement('td');
-                    td.innerHTML = "<button class='btn btn-info'>添加</button><button class='btn btn-warning'>删除</button>"
+                    td.innerHTML = "<button class='btn btn-info'>修改</button><button class='btn btn-warning'>删除</button>"
                     tr.appendChild(td);
                     $tbody.appendChild(tr);
                 }    
@@ -148,6 +154,45 @@
             },"json")
         })
         
+        //修改
+        $('.tbody').on('click','.btn-info',function(){
+            // console.log(1)
+            $(this).html('确定') ;
+            $(this).attr('class','btn btn-primary update') ;
+            var $tr = $(this).closest('tr')
+            var $tdBox = $tr.find('td')
+            // console.log($tdBox) ;
+            for(var i = 1 ; i < $tdBox.length - 1 ; i++){
+                var value = $tdBox.eq(i).html() ;
+                $tdBox.eq(i).html(`<input type='text' value = ${value}>`)
+            }
+        })
+        $('.tbody').on('click','.update',function(){
+            // console.log(11)
+            var _this = $(this)
+            var $tr = _this.closest('tr');
+            var $tdBox = $tr.find('td');
+            var params = {
+                id : $tdBox.eq(0).html(),
+                username : $tdBox.eq(1).find('input').val(),
+                score : $tdBox.eq(2).find('input').val(),
+                mark : $tdBox.eq(3).find('input').val()
+            }
+            console.log(params)
+            $.post('php/update.php',params,function(json){
+                if(json.code == 0){
+                    console.log(1)        
+                    _this.html('修改').attr('class','btn btn-info') ;
+                    for(var i = 1; i < $tdBox.length-1; i++){
+                        var value = $tdBox.eq(i).find('input').val()
+                        $tdBox.eq(i).html(value);
+                    }
+                }else(
+                    alert(json.msg)
+                )   
+            },"json")   
+        })
+       
     </script>
 </body>
 </html>

@@ -49,7 +49,7 @@
         password:$password.val()
     }
     console.log(1)
-    $.post("work/work.php",params,function(json){
+    $.post("php/login.php",params,function(json){
         if(json.code == 0){
             // console.log(json)
             window.location.href = 'manage.html' ;
