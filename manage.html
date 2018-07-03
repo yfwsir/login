@@ -21,9 +21,19 @@
         tr{
             height: 50px;
         }
+        .form-group-lable{
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        .addScore{
+            display: block;
+            cursor: pointer;
+            font-size: 30px;
+        }
     </style>
 </head>
 <body>
+    <a class="addScore">添加新成绩</a>
     <table class="table-bordered table-striped">
         <thead>
             <tr>
@@ -38,6 +48,32 @@
 
         </tbody>
     </table>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+                <form>
+                        <div class="form-group">
+                          <label for="exampleInputEmail1" class="form-group-lable">用户名</label>
+                          <input type="text" class="form-control" id="exampleInputEmail1" placeholder="请输入添加的用户名">
+                        </div>
+                        <div class="form-group">
+                          <label for="exampleInputPassword1" class="form-group-lable">分数</label>
+                          <input type="text" class="form-control" id="exampleInputPassword1" placeholder="请输入分数">
+                        </div>
+                        <div class="form-group">
+                                <label for="exampleInputPassword1" class="form-group-lable">备注</label>
+                                <input type="text" class="form-control btn-lg btn-block" id="exampleInputPassword2" placeholder="请输入备注信息">
+                        </div>
+                </form>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-success btn-lg btn-block addClick" data-dismiss="modal">点击添加</button>
+            </div>
+
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.js"></script>
     <script>
@@ -55,7 +91,7 @@
                         tr.appendChild(td);
                     }
                     var td =document.createElement('td');
-                    td.innerHTML = "<button class='btn btn-info'>添加</button><button class='btn btn-warning'>删除</button>"
+                    td.innerHTML = "<button class='btn btn-info'>修改</button><button class='btn btn-warning'>删除</button>"
                     tr.appendChild(td);
                     $tbody.appendChild(tr);
                 }    
@@ -71,8 +107,47 @@
                     $tr.remove();
                 }
             },"json")
-
         })
+       
+        $('.addScore').click(function(){
+            // console.log(1);
+            $('#myModal').modal('show') ;
+            $('#exampleInputEmail1').val('') ;
+            $('#exampleInputPassword1').val('') ;
+            $('#exampleInputPassword2').val('') ;
+        })
+        
+        
+        $('.addClick').click(function(){
+            var params = {
+                username : $('#exampleInputEmail1').val(),
+                score : $('#exampleInputPassword1').val(),
+                mark : $('#exampleInputPassword2').val(),
+            }
+            $.post('work/add.php',params,function(json){
+                if(json.code==0){
+                    var $tbody = document.querySelector('.tbody');
+                    $tbody.innerHTML = '';
+                // console.log(json)
+                // var $tbody = $(".tbody") ;
+                
+                // var $tbody = $('.tbody');
+                for(var i = 0; i < json.data.length; i++){
+                    var tr = document.createElement('tr');
+                    for(var j in json.data[i]){
+                        var td = document.createElement('td');
+                        td.innerHTML = json.data[i][j] ;
+                        tr.appendChild(td);
+                    }
+                    var td =document.createElement('td');
+                    td.innerHTML = "<button class='btn btn-info'>添加</button><button class='btn btn-warning'>删除</button>"
+                    tr.appendChild(td);
+                    $tbody.appendChild(tr);
+                }    
+            }
+            },"json")
+        })
+        
     </script>
 </body>
 </html>
